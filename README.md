@@ -1,4 +1,4 @@
-# Parkha (पर्ख, "wait"): pest advice for Nepali farmers that never skips the waiting period
+# Crop Pest Advisor (LLM): pest advice for Nepali farmers that never skips the waiting period
 
 [![Try it live](https://img.shields.io/badge/Try_it-live-2ea44f?style=for-the-badge)](https://parkha-nepal-safe-harvest.onrender.com)
 
