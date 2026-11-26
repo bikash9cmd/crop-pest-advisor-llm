@@ -69,3 +69,20 @@ def test_bad_requests(handler):
     assert h.api(_event("POST /ask", {}), None)["statusCode"] == 400
     assert h.api({"routeKey": "POST /ask", "body": "not json"}, None)["statusCode"] == 400
     assert h.api(_event("GET /nope"), None)["statusCode"] == 404
+
+
+@pytest.mark.parametrize("raw", ["[]", "null", '"hi"', "3"])
+@pytest.mark.parametrize("route", ["POST /ask", "POST /feedback"])
+def test_non_object_json_body_is_a_400(handler, route, raw):
+    h, _ = handler
+    r = h.api({"routeKey": route, "body": raw}, None)
+    assert r["statusCode"] == 400
+    assert json.loads(r["body"]) == {"error": "body must be a JSON object"}
+
+
+def test_impossible_days_ago_asks_for_the_day_instead_of_crashing(handler):
+    h, _ = handler
+    q = "I sprayed chlorantraniliprole on my brinjal 400000000 days ago. When can I harvest?"
+    r = h.api(_event("POST /ask", {"question": q}), None)
+    assert r["statusCode"] == 200
+    assert "Tell me the day you last sprayed" in json.loads(r["body"])["answer"]
