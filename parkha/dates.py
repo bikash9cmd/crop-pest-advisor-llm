@@ -114,7 +114,10 @@ def parse_spray_date(text: str, today: date) -> date | None:
     t = ascii_digits(text)
     m = _DAYS_AGO.search(t)
     if m:
-        return today - timedelta(days=int(m.group(1)))
+        try:
+            return today - timedelta(days=int(m.group(1)))
+        except OverflowError:
+            return None  # "400000000 days ago" is a typo, not a date; the answer asks for the day
     m = _ISO.search(t)
     if m:
         try:

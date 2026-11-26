@@ -88,6 +88,8 @@ def api(event, context):
         body = json.loads(event.get("body") or "{}")
     except json.JSONDecodeError:
         return _resp(400, {"error": "body must be JSON"})
+    if not isinstance(body, dict):
+        return _resp(400, {"error": "body must be a JSON object"})
     client, table = _clients()
     if route == "POST /ask":
         q = body.get("question")

@@ -28,6 +28,12 @@ def test_vague_dates_give_none(today):
     assert dates.parse_spray_date("I sprayed it", today) is None
 
 
+def test_impossible_day_count_gives_none(today):
+    assert dates.parse_spray_date("sprayed 400000000 days ago", today) is None
+    assert dates.parse_spray_date("९९९९९९९९९९ दिन अगाडि छरें", today) is None
+    assert dates.parse_spray_date("sprayed 400 days ago", today) == date(2025, 9, 16)
+
+
 def test_future_spray_date_is_an_error(book, today):
     assert tools.safe_harvest_date(book, "neem", "tomato", "2026-10-25", today)["error"] == "spray_date_in_future"
 
